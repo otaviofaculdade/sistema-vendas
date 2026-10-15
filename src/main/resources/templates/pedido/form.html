@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Pedido</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<nav th:replace="~{fragments/menu :: menu}"></nav>
+<div class="container mt-4 mb-5">
+    <h2>Novo Pedido</h2>
+
+    <div class="alert alert-danger" th:if="${erro}" th:text="${erro}"></div>
+
+    <form th:action="@{/pedidos/novo}" th:object="${pedidoForm}" method="post">
+        <div class="mb-3">
+            <label for="clienteId" class="form-label">Cliente</label>
+            <select class="form-select" id="clienteId" th:field="*{clienteId}">
+                <option value="">Selecione...</option>
+                <option th:each="cliente : ${clientes}" th:value="${cliente.id}"
+                        th:text="${cliente.nomeCompleto + ' - ' + cliente.cpfFormatado}"></option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('clienteId')}" th:errors="*{clienteId}"></div>
+        </div>
+
+        <h5 class="mt-4">Produtos</h5>
+        <table class="table table-bordered align-middle">
+            <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Preço</th>
+                <th>Estoque</th>
+                <th style="width: 160px">Quantidade</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item, i : *{itens}">
+                <td>
+                    <input type="hidden" th:field="*{itens[__${i.index}__].produtoId}">
+                    <input type="hidden" th:field="*{itens[__${i.index}__].nome}">
+                    <input type="hidden" th:field="*{itens[__${i.index}__].preco}">
+                    <input type="hidden" th:field="*{itens[__${i.index}__].estoque}">
+                    <span th:text="${item.nome}"></span>
+                </td>
+                <td th:text="${'R$ ' + #numbers.formatDecimal(item.preco, 1, 'POINT', 2, 'COMMA')}"></td>
+                <td th:text="${item.estoque}"></td>
+                <td>
+                    <input type="number" min="0" th:max="${item.estoque}" class="form-control"
+                           th:field="*{itens[__${i.index}__].quantidade}">
+                    <div class="text-danger" th:if="${#fields.hasErrors('itens[__${i.index}__].quantidade')}"
+                         th:errors="*{itens[__${i.index}__].quantidade}"></div>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(pedidoForm.itens)}">
+                <td colspan="4" class="text-center">Nenhum produto cadastrado.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-primary">Realizar Pedido</button>
+        <a th:href="@{/pedidos}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

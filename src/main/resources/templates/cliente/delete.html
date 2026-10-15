@@ -10,6 +10,8 @@
 <div class="container mt-4">
     <h1>Excluir Cliente</h1>
 
+    <div class="alert alert-warning" th:if="${erro}" th:text="${erro}"></div>
+
     <div class="alert alert-danger">
         <p>Tem certeza que deseja excluir o cliente <strong th:text="${cliente.nomeCompleto}"></strong>?</p>
         <p class="mb-0">Esta ação não pode ser desfeita.</p>

@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.aweb.sistema_vendas.model.Produto;
+import br.com.aweb.sistema_vendas.service.PedidoService;
 import br.com.aweb.sistema_vendas.service.ProdutoService;
 import jakarta.validation.Valid;
 
@@ -23,6 +24,9 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     // Listar produtos
     @GetMapping
@@ -79,9 +83,14 @@ public class ProdutoController {
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(Produto produto) {
+    public ModelAndView delete(Produto produto) {
+        if (pedidoService.produtoPossuiPedidos(produto.getId())) {
+            return new ModelAndView("produto/delete", Map.of(
+                    "produto", produtoService.buscarPorId(produto.getId()).orElseThrow(),
+                    "erro", "Este produto não pode ser excluído porque faz parte de pedidos."));
+        }
         produtoService.excluir(produto.getId());
-        return "redirect:/produtos";
+        return new ModelAndView("redirect:/produtos");
     }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.aweb.sistema_vendas.model.Cliente;
 import br.com.aweb.sistema_vendas.service.ClienteService;
+import br.com.aweb.sistema_vendas.service.PedidoService;
 import jakarta.validation.Valid;
 
 @Controller
@@ -25,6 +26,9 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     private static final List<String> UFS = List.of(
             "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA",
@@ -97,9 +101,14 @@ public class ClienteController {
 
     // Excluir cliente
     @PostMapping("/delete/{id}")
-    public String confirmDelete(@PathVariable Long id) {
+    public ModelAndView confirmDelete(@PathVariable Long id) {
+        if (pedidoService.clientePossuiPedidos(id)) {
+            return new ModelAndView("cliente/delete", Map.of(
+                    "cliente", clienteService.buscarPorId(id).orElseThrow(),
+                    "erro", "Este cliente não pode ser excluído porque possui pedidos."));
+        }
         clienteService.excluir(id);
-        return "redirect:/clientes";
+        return new ModelAndView("redirect:/clientes");
     }
 
     // E-mail e CPF não podem se repetir entre clientes

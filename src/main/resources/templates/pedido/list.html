@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Listagem de Pedidos</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<nav th:replace="~{fragments/menu :: menu}"></nav>
+<div class="container mt-4">
+    <h1>Pedidos</h1>
+    <a class="btn btn-primary mb-3" th:href="@{/pedidos/novo}">Novo Pedido</a>
+
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="thead-dark">
+        <tr>
+            <th>Nº</th>
+            <th>Data</th>
+            <th>Cliente</th>
+            <th>Itens</th>
+            <th>Valor Total</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pedido : ${pedidos}">
+            <td th:text="${pedido.id}"></td>
+            <td th:text="${#temporals.format(pedido.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${pedido.cliente.nomeCompleto}"></td>
+            <td th:text="${#lists.size(pedido.itens)}"></td>
+            <td th:text="${'R$ ' + #numbers.formatDecimal(pedido.valorTotal, 1, 'POINT', 2, 'COMMA')}"></td>
+            <td>
+                <span class="badge" th:classappend="${pedido.cancelado} ? 'bg-danger' : 'bg-success'"
+                      th:text="${pedido.status}"></span>
+            </td>
+            <td><a class="btn btn-sm btn-info" th:href="@{/pedidos/{id}(id=${pedido.id})}">Detalhes</a></td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(pedidos)}">
+            <td colspan="7" class="text-center">Nenhum pedido realizado.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
