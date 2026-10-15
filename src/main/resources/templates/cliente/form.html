@@ -6,6 +6,7 @@
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
+<nav th:replace="~{fragments/menu :: menu}"></nav>
 <div class="container mt-5 mb-5">
     <h2 th:text="${cliente.id == null} ? 'Novo Cliente' : 'Editar Cliente'"></h2>
 

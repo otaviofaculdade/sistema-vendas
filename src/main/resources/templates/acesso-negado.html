@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Acesso negado</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<nav th:replace="~{fragments/menu :: menu}"></nav>
+<div class="container mt-4">
+    <div class="alert alert-warning">
+        <h1 class="h4">Acesso negado</h1>
+        <p class="mb-0">Seu perfil não tem permissão para acessar esta página.</p>
+    </div>
+    <a th:href="@{/}" class="btn btn-secondary">Voltar ao início</a>
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

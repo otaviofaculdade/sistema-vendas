@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sistema de Vendas</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<nav th:replace="~{fragments/menu :: menu}"></nav>
+<div class="container mt-4">
+    <h1>Olá, <span sec:authentication="principal.nome"></span>!</h1>
+    <p class="text-muted" sec:authorize="hasRole('ADMIN')">Você tem acesso total: pedidos, produtos e clientes.</p>
+    <p class="text-muted" sec:authorize="hasRole('PADRAO')">Você pode realizar e consultar pedidos. O cadastro de produtos e clientes é restrito ao administrador.</p>
+
+    <div class="row g-3 mt-2">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Pedidos</h5>
+                    <p class="card-text">Realize e acompanhe os pedidos de venda.</p>
+                    <a th:href="@{/pedidos/novo}" class="btn btn-primary">Novo Pedido</a>
+                    <a th:href="@{/pedidos}" class="btn btn-outline-primary">Listar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Produtos</h5>
+                    <p class="card-text">Catálogo de produtos e estoque.</p>
+                    <a th:href="@{/produtos/novo}" class="btn btn-primary" sec:authorize="hasRole('ADMIN')">Novo Produto</a>
+                    <a th:href="@{/produtos}" class="btn btn-outline-primary">Listar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Clientes</h5>
+                    <p class="card-text">Cadastro de clientes.</p>
+                    <a th:href="@{/clientes/novo}" class="btn btn-primary" sec:authorize="hasRole('ADMIN')">Novo Cliente</a>
+                    <a th:href="@{/clientes}" class="btn btn-outline-primary">Listar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

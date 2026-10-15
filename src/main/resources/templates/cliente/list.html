@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Listagem de Clientes</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
+<nav th:replace="~{fragments/menu :: menu}"></nav>
 <div class="container mt-4">
     <h1>Clientes</h1>
-    <a class="btn btn-primary mb-3" th:href="@{/clientes/novo}">Novo Cliente</a>
+    <a class="btn btn-primary mb-3" th:href="@{/clientes/novo}" sec:authorize="hasRole('ADMIN')">Novo Cliente</a>
 
     <table class="table table-bordered table-striped align-middle">
         <thead class="thead-dark">
@@ -18,7 +20,7 @@
             <th>CPF</th>
             <th>Telefone</th>
             <th>Endereço Completo</th>
-            <th>Ações</th>
+            <th sec:authorize="hasRole('ADMIN')">Ações</th>
         </tr>
         </thead>
         <tbody>
@@ -28,7 +30,7 @@
             <td th:text="${cliente.cpfFormatado}"></td>
             <td th:text="${cliente.telefoneFormatado}"></td>
             <td th:text="${cliente.endereco.enderecoCompleto}"></td>
-            <td class="text-nowrap">
+            <td class="text-nowrap" sec:authorize="hasRole('ADMIN')">
                 <a class="btn btn-sm btn-warning" th:href="@{/clientes/edit/{id}(id=${cliente.id})}">Editar</a>
                 <a class="btn btn-sm btn-danger" th:href="@{/clientes/delete/{id}(id=${cliente.id})}">Excluir</a>
             </td>
